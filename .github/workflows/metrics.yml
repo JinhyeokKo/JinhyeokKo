@@ -24,17 +24,15 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install dependencies
-        run: npm install @lowlighter/metrics@latest
+      - name: Download metrics source
+        run: git clone https://github.com/lowlighter/metrics.git
 
       - name: Generate metrics
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          npx @lowlighter/metrics \
-            --token ${{ secrets.GH_TOKEN }} \
-            --template classic \
-            --config base.json
+          cd metrics
+          node index.mjs --token ${{ secrets.GH_TOKEN }} --template classic --config ../base.json
 
       - name: Commit and push changes
         run: |

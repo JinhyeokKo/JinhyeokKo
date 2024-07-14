@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     name: generate-github-profile-3d-contrib
     permissions:
-      contents: write
+      contents: write  # 명시적으로 권한 설정
     steps:
       - uses: actions/checkout@v3
       - uses: yoshi389111/github-profile-3d-contrib@0.7.1
@@ -25,4 +25,4 @@ jobs:
           git config user.email "github-actions@github.com"
           git add -A .
           git commit -m "generated"
-          git push https://github-actions:${{ secrets.TOKEN }}@github.com/${{ github.repository_owner }}/${{ github.repository }}.git main
+          git push https://github-actions:${{ secrets.TOKEN }}@github.com/${{ github.repository }}.git main

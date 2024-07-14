@@ -1,0 +1,45 @@
+name: Metrics
+
+on:
+  # Schedule updates (each hour)
+  schedule:
+    - cron: "0 * * * *"
+
+  # Lines below let you run workflow manually and on each commit
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository content
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install @lowlighter/metrics@latest
+
+      - name: Generate metrics
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          npx @lowlighter/metrics \
+            --token ${{ secrets.GH_TOKEN }} \
+            --template classic \
+            --config base.json
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "github-actions[bot]"
+          git add -A
+          git commit -m "Update metrics" || exit 0
+          git push
